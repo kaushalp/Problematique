@@ -72,68 +72,35 @@ namespace ProblematicMvc.Controllers
 
         /// Static variable used to store our 'big' block. This ensures that the block is always up for garbage collection.
         /// </summary>
-        static byte[] bigBlock;
-
-        /// <summary>
-        /// Allocates 90,000 byte blocks, optionally intersperced with larger blocks
-        /// </summary>
-        static void Fill(bool allocateBigBlocks, bool grow, bool alwaysGC)
+        static byte[] byteArray;
+        public ActionResult HighMemory()
         {
-            // Number of bytes in a small block
-            // 90000 bytes, just above the limit for the LOH
-            const int blockSize = 90000;
-
-            // Number of bytes in a larger block: 16Mb initially
-            int largeBlockSize = 1 << 24;
-
-            // Number of small blocks allocated
-            int count = 0;
-
             try
             {
-                // We keep the 'small' blocks around 
-                // (imagine an algorithm that allocates memory in chunks)
-                List<byte[]> smallBlocks = new List<byte[]>();
+                // Allocating blocks larger than 85k (87040 bytes) so that it goes to LOH
+                List<byte[]> sBlocks = new List<byte[]>();
+                const int sBlkSize = 90000;
 
-                for (;;)
-                { 
-                    // Force a GC if necessaryry
-                    if (alwaysGC) GC.Collect();
-
-                    // Allocate a larger block if we're set up to do soso
-                    if (allocateBigBlocks)
-                    {
-                        bigBlock = new byte[largeBlockSize];
-                    }
-
-                    // The next 'large' block will be just slightly largerer
-                    if (grow) largeBlockSize++;
-
-                    // Allocate a new block
-                    smallBlocks.Add(new byte[blockSize]);
+                // Allocating Larger blocks in LOH
+                int lBlocks = 1 << 24;
+                int count = 0;
+                for(;;) // Infinite loop
+                {
+                    byteArray = new byte[lBlocks];
+                    sBlocks.Add(new byte[sBlkSize]);
+                    lBlocks++;
                     count++;
                 }
             }
             catch (OutOfMemoryException)
             {
-                // Force a GC, which should empty the LOH again
-                bigBlock = null;
+                // Force a GC
+                //byteArray= null;
                 GC.Collect();
-
             }
-        }
-
-        public ActionResult HighMemory()
-        {
-            Fill(true, true, false);
-            Fill(true, true, true);
-            Fill(false, true, false);
-            Fill(true, false, false);
-
             return View();
         }
     }
-
     internal class ExceptionHandler
     {
         public static void LogException(Exception ex)
@@ -142,7 +109,4 @@ namespace ProblematicMvc.Controllers
         }
 
     }
-
-
-
 }
