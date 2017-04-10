@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "High CPU";
+}
+
+<h2>HighCpu</h2>
+
+<ul>
+    @for (int i = 0; i < ViewBag.Num; i++)
+    {
+        <li>@ViewBag.Message</li>
+    }
+
+
+</ul>
