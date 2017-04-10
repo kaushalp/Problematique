@@ -96,17 +96,7 @@ namespace ProblematicMvc.Controllers
                 List<byte[]> smallBlocks = new List<byte[]>();
 
                 for (;;)
-                {
-                    // Write out some status information
-                    //if ((count % 1000) == 0)
-                    //{
-                    //    Console.CursorLeft = 0;
-                    //    Console.Write(new string(' ', 20));
-                    //    Console.CursorLeft = 0;
-                    //    Console.Write("{0}", count);
-                    //    Console.CursorLeft = 0;
-                    //}
-
+                { 
                     // Force a GC if necessaryry
                     if (alwaysGC) GC.Collect();
 
@@ -130,12 +120,6 @@ namespace ProblematicMvc.Controllers
                 bigBlock = null;
                 GC.Collect();
 
-                // Display the results for the amount of memory we managed to allocate
-               /* Console.WriteLine("{0}: {1}Mb allocated"
-                                  , (allocateBigBlocks ? "With large blocks" : "Only small blocks")
-                                  + (alwaysGC ? ", frequent garbage collections" : "")
-                                  + (grow ? "" : ", large blocks not growing")
-                                  , (count * blockSize) / (1024 * 1024));*/
             }
         }
 
