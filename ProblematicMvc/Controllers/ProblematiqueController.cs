@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
-
+using System.Web.Hosting;
 
 namespace ProblematicMvc.Controllers
 {
@@ -15,26 +15,16 @@ namespace ProblematicMvc.Controllers
         {
             return View();
         }
-
-        public ActionResult HighCpu(int num = 1)
+        public ActionResult HighCpu(int num = 10)
         {
-            string LargeString = "Historically, the world of data and the world of objects " +
-            "have not been well integrated. Programmers work in C# or Visual Basic " +
-            "and also in SQL or XQuery. On the one side are concepts such as classes, " +
-            "objects, fields, inheritance, and .NET Framework APIs. On the other side " +
-            "are tables, columns, rows, nodes, and separate languages for dealing with " +
-            "them. Data types often require translation between the two worlds; there are " +
-            "different standard functions. Because the object world has no notion of query, a " +
-            "query can only be represented as a string without compile-time type checking or " +
-            "IntelliSense support in the IDE. Transferring data from SQL tables or XML trees to " +
-            "objects in memory is often tedious and error-prone.";
-            string SmallText = ".................";
-            for (int i = 0; i < 1000; i++)
+            var fileContents = System.IO.File.ReadAllText(HostingEnvironment.MapPath(@"~/App_Data/big.txt"));
+            string result = fileContents;
+            for(int i=0;i<num;i++)
             {
-                LargeString += SmallText;
+                result = string.Concat(result, result);
             }
-            ViewBag.Message = LargeString;
-            ViewBag.Num = num * 1000;
+            ViewBag.Message = result;
+            //ViewBag.Num = num * 1000;
             return View();
         }
         public ActionResult Crash()
@@ -46,11 +36,9 @@ namespace ProblematicMvc.Controllers
             catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex);
-
             }
             return View();
         }
-
         public static void WriteLog(string message, string fileName)
         {
             try
@@ -69,9 +57,6 @@ namespace ProblematicMvc.Controllers
             }
            // return View();
         }
-
-        /// Static variable used to store our 'big' block. This ensures that the block is always up for garbage collection.
-        /// </summary>
         static byte[] byteArray;
         public ActionResult HighMemory()
         {
@@ -107,6 +92,5 @@ namespace ProblematicMvc.Controllers
         {
             ProblematiqueController.WriteLog(ex.Message, "D:\\log.txt");
         }
-
     }
 }
