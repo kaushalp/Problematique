@@ -180,6 +180,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\big.txt" />
+    <Content Include="big.txt" />
+    <Content Include="client.php" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
