@@ -90,7 +90,6 @@ namespace ProblematicMvc.Controllers
             }
             catch
             {
-
             }
             //catch (OutOfMemoryException)
             //{
