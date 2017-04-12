@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.Web.Hosting;
+using System.Diagnostics;
+using System.Threading;
 
 namespace ProblematicMvc.Controllers
 {
@@ -15,16 +17,25 @@ namespace ProblematicMvc.Controllers
         {
             return View();
         }
-        public ActionResult HighCpu(int num = 10)
+        public ActionResult HighCpu(int percentage = 99)
         {
-            var fileContents = System.IO.File.ReadAllText(HostingEnvironment.MapPath(@"~/App_Data/big.txt"));
-            string result = fileContents;
-            for(int i=0;i<num;i++)
+            //Source: http://stackoverflow.com/questions/2514544/simulate-steady-cpu-load-and-spikes 
+            if (percentage < 0 || percentage > 100)
+                throw new ArgumentException("percentage");
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            while (true)
             {
-                result = string.Concat(result, result);
+                // Make the loop go on for "percentage" milliseconds then sleep the 
+                // remaining percentage milliseconds. So 40% utilization means work 40ms and sleep 60ms
+                if (watch.ElapsedMilliseconds > percentage)
+                {
+                    Thread.Sleep(100 - percentage);
+                    watch.Reset();
+                    watch.Start();
+                }
             }
-            ViewBag.Message = result;
-            //ViewBag.Num = num * 1000;
+
             return View();
         }
         public ActionResult Crash()
@@ -77,12 +88,16 @@ namespace ProblematicMvc.Controllers
                     count++;
                 }
             }
-            catch (OutOfMemoryException)
+            catch
             {
-                // Force a GC
-                //byteArray= null;
-                GC.Collect();
+
             }
+            //catch (OutOfMemoryException)
+            //{
+            //    // Force a GC
+            //    //byteArray= null;
+            //    GC.Collect();
+            //}
             return View();
         }
     }

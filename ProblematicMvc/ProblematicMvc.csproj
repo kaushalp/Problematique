@@ -217,6 +217,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Problematique\HighCpu.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Problematique\HighMemory.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
