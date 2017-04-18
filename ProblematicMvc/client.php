@@ -1,10 +1,8 @@
 <html>
     <body>
 <?php
-    
     $connstr = getenv("MYSQLCONNSTR_MySqlDB");    
     //echo "MySQL Connection String is".$connstr;
-    
     foreach ($_SERVER as $key => $value) 
     {
         if (strpos($key, "MYSQLCONNSTR_") !== 0) 
@@ -18,7 +16,7 @@
         break;
     }
     echo "Server Name: ".$hostname."</br>";
-/* now you can use the $host, $username, $password like you normally would */
+    /* now you can use the $host, $username, $password like you normally would */
     $con = mysql_connect($host, $username, $password);
     //connection to the database
     $dbhandle = mysql_connect($hostname, $username, $password) or die("Unable to connect to MySQL");
