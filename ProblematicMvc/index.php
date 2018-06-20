@@ -8,6 +8,6 @@
     }
     if(!empty($fileContents)) {
         echo "<pre>".$fileContents."</pre>";
-	echo "Testing changes";
+	echo "Test changes";
     }
 ?>
