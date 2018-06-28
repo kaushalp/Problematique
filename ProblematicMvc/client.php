@@ -1,51 +1,67 @@
 <html>
     <body>
 <?php
-    $connstr = getenv("MYSQLCONNSTR_MySqlDB");    
-    //echo "MySQL Connection String is".$connstr;
+    $connstr = getenv("MYSQLCONNSTR_mysqldb");    
+    
+    echo "Coonection String: " .$connstr. "</br>";
+    
+    //Parse the above environment variable to retrieve username, password and hostname.
     foreach ($_SERVER as $key => $value) 
     {
-        if (strpos($key, "MYSQLCONNSTR_") !== 0) 
+        if (strpos($key, "MYSQLCONNSTR_mysqldb") !== 0) 
         {
             continue;
         }
-
+        $dbname = preg_replace("/^.*Database=(.+?);.*$/", "\\1", $value);
         $hostname = preg_replace("/^.*Data Source=(.+?);.*$/", "\\1", $value);
         $username = preg_replace("/^.*User Id=(.+?);.*$/", "\\1", $value);
         $password = preg_replace("/^.*Password=(.+?)$/", "\\1", $value);
         break;
     }
     echo "Server Name: ".$hostname."</br>";
-    /* now you can use the $host, $username, $password like you normally would */
-    $con = mysql_connect($host, $username, $password);
-    //connection to the database
-    $dbhandle = mysql_connect($hostname, $username, $password) or die("Unable to connect to MySQL");
-    echo "<br>Connected to MySQL</br>";
-        
-    sleep(10);
-    //select a database to work with
-    $selected = mysql_select_db("kauwpdb",$dbhandle) or die("Could not select kauwpdb");
-    
-    //execute the SQL query and return records
-    $sql = mysql_query("SELECT * FROM city") ;//or die("Could not query database");
+    echo "Database Name: ".$dbname."</br>";
+    echo "User Name: ".$username."</br>";
 
-    echo "<table border='4' class='stats' cellspacing='0'>
-    <tr><td class='hed' colspan='8'>Population of Major Cities</td></tr>
-    <tr><th>ID</th><th>City Name</th><th>Population</th></tr>";
-    //echo "ID:".$row{'id'}." Name:".$row{'model'}.
     
-    while($rows = mysql_fetch_array($sql)) 
-    { 
-        echo "<tr>";
-        echo "<td>" .$rows{'ID'}. "</td>";
-        echo "<td>" .$rows{'Name'}. "</td>";
-        echo "<td>" .$rows{'Population'}. "</td>";
-        echo "</tr>";
+    //connection to the database
+    //$dbhandle = mysql_connect($hostname, $username, $password) or die("Unable to connect to MySQL");
+    
+    $conn = new mysqli($hostname, $username, $password, $dbnames) or die("Unable to connect to MySQL");
+    echo "<br>Connected to DB server successfully</br>";
+    //select a database to work with
+    //$selectDb = mysql_select_db("employees",$dbhandle) or die("Could not select database");
+    
+    $sql = "SELECT * FROM employees.employees LIMIT 1000";
+    $result = $conn->query($sql);
+    
+    //execute the SQL query and return records
+
+	if ($result->num_rows > 0) {
+    	echo "<table border='4' class='stats' cellspacing='0'>
+        <tr><td class='hed' colspan='8'>Employee List</td></tr>
+        <tr><th>Employee ID</th><th>First name</th><th>Last Name</th>
+        <th>Date of birth</th><th>Date of Hire</th><th>Gender</th></tr>";
+        //echo "ID:".$row{'id'}." Name:".$row{'model'}.
+        
+        while($rows = $result->fetch_assoc()) 
+        { 
+            echo "<tr>";
+            echo "<td>" .$rows{'emp_no'}. "</td>";
+            echo "<td>" .$rows{'first_name'}. "</td>";
+            echo "<td>" .$rows{'last_name'}. "</td>";
+            echo "<td>" .$rows{'birth_date'}. "</td>";
+            echo "<td>" .$rows{'hire-date'}. "</td>";
+            echo "<td>" .$rows{'gender'}. "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+	}
+	else {
+    echo "0 results";
     }
-    echo "</table>";
-    
-    //close the connection
-    //mysql_close($dbhandle);
+	
+	
+   // mysql_close($dbhandle);
 ?>
 </body>
 </html>
