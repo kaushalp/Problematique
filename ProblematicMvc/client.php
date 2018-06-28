@@ -23,9 +23,7 @@
     echo "User Name: ".$username."</br>";
 
     
-    //connection to the database
-    //$dbhandle = mysql_connect($hostname, $username, $password) or die("Unable to connect to MySQL");
-    
+    //connection to the database    
     $conn = new mysqli($hostname, $username, $password, $dbnames) or die("Unable to connect to MySQL");
     echo "<br>Connected to DB server successfully</br>";
     //select a database to work with
@@ -35,14 +33,12 @@
     $result = $conn->query($sql);
     
     //execute the SQL query and return records
-
-	if ($result->num_rows > 0) {
+    if ($result->num_rows > 0) 
+    {
     	echo "<table border='4' class='stats' cellspacing='0'>
         <tr><td class='hed' colspan='8'>Employee List</td></tr>
         <tr><th>Employee ID</th><th>First name</th><th>Last Name</th>
-        <th>Date of birth</th><th>Date of Hire</th><th>Gender</th></tr>";
-        //echo "ID:".$row{'id'}." Name:".$row{'model'}.
-        
+        <th>Date of birth</th><th>Date of Hire</th><th>Gender</th></tr>";    
         while($rows = $result->fetch_assoc()) 
         { 
             echo "<tr>";
@@ -59,8 +55,6 @@
 	else {
     echo "0 results";
     }
-	
-	
    // mysql_close($dbhandle);
 ?>
 </body>
