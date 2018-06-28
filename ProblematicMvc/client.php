@@ -3,7 +3,7 @@
 <?php
     $connstr = getenv("MYSQLCONNSTR_mysqldb");    
     
-    echo "Coonection String: " .$connstr. "</br>";
+    //echo "Coonection String: " .$connstr. "</br>";
     
     //Parse the above environment variable to retrieve username, password and hostname.
     foreach ($_SERVER as $key => $value) 
